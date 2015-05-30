@@ -51,7 +51,8 @@ function findPathOriginal(helperName) {
 
 function mapPathResolve(base) {
   return function mapPathResolveIterator(node) {
-    return path.resolve(base, node.params[0].value);
+    var absPath = path.resolve(base +  node.params[0].value);
+    return './' + path.relative(process.cwd(), absPath);
   };
 }
 
