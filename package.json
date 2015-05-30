@@ -4,7 +4,7 @@
   "description": "We have pathing to modules in our handlebar templates, this resolves those modules for browserify packs.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc tap test"
   },
   "keywords": [
     "handlebars",
@@ -17,5 +17,8 @@
     "bluebird": "^2.9.25",
     "glob": "^5.0.6",
     "handlebars": "^3.0.3"
+  },
+  "devDependencies": {
+    "tap": "^1.2.0"
   }
 }
