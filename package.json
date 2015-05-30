@@ -1,0 +1,21 @@
+{
+  "name": "handlebars-resolve",
+  "version": "0.1.0",
+  "description": "We have pathing to modules in our handlebar templates, this resolves those modules for browserify packs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "handlebars",
+    "resolve",
+    "path"
+  ],
+  "author": "Jacob Lowe",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^2.9.25",
+    "glob": "^5.0.6",
+    "handlebars": "^3.0.3"
+  }
+}
