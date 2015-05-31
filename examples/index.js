@@ -4,5 +4,6 @@ HandlebarsDepResolve({
   files: './templates/*.hbs',
   helper: 'view',
   outputFile: './resolves.js',
-  basePath: './views/'
+  basePath: './views/',
+  cwd: process.cwd()
 });

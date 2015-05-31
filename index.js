@@ -39,9 +39,23 @@ function readFile(file, callback) {
 
 var createResolveFile =
 module.exports._createResolveFile =
-function createResolveFile(ws, files, callback) {
+function createResolveFile(ws, files) {
   var requires = files.map(function(file) {
-      return '\tthis[\'' + file + '\'] = require("' + file + '");\n';
+      return (
+          '\ttry {\n' +
+            '\t\tthis[\'' + file[1] + '\'] = require(\'' + file[1] + '\');\n' +
+          '\t} catch(e) {\n' +
+            '\t\tthrow Error(\'module "' +
+            file[1] +
+            '" not found from "' +
+            file[2] +
+            '" ' +
+            file[0].line +
+            ':' +
+            file[0].column +
+            '\');\n' +
+          '\t}\n'
+      );
     });
   ws.write(requires.join(''));
 };
@@ -54,7 +68,7 @@ function mapFilePromise(file) {
       if (err) {
         return reject(err);
       }
-      resolve(Handlebars.parse(content));
+      resolve([file, Handlebars.parse(content)]);
     });
   });
 };
@@ -76,22 +90,25 @@ function findPathOriginal(helperName) {
 
 var mapPathResolve =
 module.exports._mapPathResolve =
-function mapPathResolve(base) {
+function mapPathResolve(options, files, index) {
   return function mapPathResolveIterator(node) {
-    var absPath = path.resolve(base +  node.params[0].value);
-    return './' +   path.relative(process.cwd(), absPath);
+    var
+      fileName = files[index][0],
+      absPath = path.resolve(options.basePath,  node.params[0].value),
+      relPath = './' +   path.relative(options.cwd || process.cwd(), absPath);
+    return [node.loc.start, relPath, fileName];
   };
 };
 
 var findHelpers =
 module.exports._findHelpers =
 function findHelpers(options) {
-  return function findHelpersIterator(ast) {
-    var fileStatements = ast.map(function(doc){
-      var statements = doc.body
+  return function findHelpersIterator(files) {
+    var fileStatements = files.map(function(file, index){
+      var statements = file[1].body
         .filter(findStatements)
         .filter(findPathOriginal(options.helper))
-        .map(mapPathResolve(options.basePath));
+        .map(mapPathResolve(options, files, index));
 
       return statements;
     });
@@ -105,7 +122,7 @@ function resolveFile(options) {
   return function(files) {
     var ws = options.outputFile ? fs.createWriteStream(options.outputFile) : process.stdout;
     ws.write('function hbsResolve() {\n');
-    files.forEach(function(file){
+    files.forEach(function(file, index){
       createResolveFile(ws, file, function(err, files) {
         if (err) {
           throw err; // need to do something better with this
