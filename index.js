@@ -25,7 +25,11 @@ module.exports = function(options) {
   if (Array.isArray(options.files)) {
     return parseFiles(options);
   }
-  glob(options.files, function(err, files) {
+  if (!options.cwd) {
+    options.cwd = process.cwd();
+  }
+  var filesPath = path.resolve(options.cwd, options.files);
+  glob(filesPath, function(err, files) {
     if (err) {
       throw err;
     }
@@ -153,9 +157,9 @@ module.exports._mapPathResolve =
 function mapPathResolve(options, files, index) {
   return function mapPathResolveIterator(node) {
     var
-      fileName = files[index][0],
-      absPath = path.resolve(options.basePath,  node.params[0].value),
-      relPath = './' +   path.relative(options.cwd || process.cwd(), absPath);
+      fileName = path.relative(options.cwd, files[index][0]),
+      absPath = path.resolve(options.cwd, options.basePath,  node.params[0].value),
+      relPath = './' +   path.relative(options.cwd, absPath);
     return [node.loc.start, relPath, fileName];
   };
 };
