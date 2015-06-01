@@ -57,7 +57,7 @@ test('the _mapPathResolve method', function(t) {
   t.equals(typeof hbsResolve._mapPathResolve, 'function', '_mapPathResolve is a function');
   t.equals(typeof hbsResolve._mapPathResolve(), 'function', '_mapPathResolve returns a function');
   var
-    options = { basePath: 'foo' },
+    options = { basePath: 'foo', cwd: process.cwd() },
     files = [['bar']],
     node = {loc:{start:'baz'}, params:[{value:'qux'}]},
     fn = hbsResolve._mapPathResolve(options, files, 0);
