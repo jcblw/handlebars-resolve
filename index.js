@@ -159,7 +159,12 @@ function mapPathResolve(options, files, index) {
     var
       fileName = path.relative(options.cwd, files[index][0]),
       absPath = path.resolve(options.cwd, options.basePath,  node.params[0].value),
-      relPath = './' +   path.relative(options.cwd, absPath);
+      relPath = path.relative(options.cwd, absPath);
+
+    if (!relPath.match(/^\./)) {
+      relPath = './' + relPath;
+    }
+
     return [node.loc.start, relPath, fileName];
   };
 };
