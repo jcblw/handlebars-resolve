@@ -5,5 +5,7 @@ HandlebarsDepResolve({
   helper: 'view',
   outputFile: './resolves.js',
   basePath: './views/',
-  cwd: process.cwd()
+  cwd: process.cwd(),
+  // need to simplify this....
+  inject: [[{line: 1, column: 2}, '../views/quxz', 'a file']]
 });

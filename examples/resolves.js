@@ -19,5 +19,10 @@ function hbsResolve() {
 	} catch(e) {
 		throw Error('module "./views/bar" not found from "templates/index.hbs" 5:4');
 	}
+	try {
+		this['../views/quxz'] = require('../views/quxz');
+	} catch(e) {
+		throw Error('module "../views/quxz" not found from "a file" 1:2');
+	}
 }
 hbsResolve.call(module.exports);

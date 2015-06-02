@@ -210,6 +210,9 @@ function resolveFile(options) {
   return function resolveFileIterator(files) {
     var ws = options.outputFile ? fs.createWriteStream(options.outputFile) : process.stdout;
     ws.write('function hbsResolve() {\n');
+    if (Array.isArray(options.inject)) {
+      files.push(options.inject);
+    }
     files.forEach(function(file, index){
       createResolveFile(ws, file, function(err, files) {
         if (err) {
