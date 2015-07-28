@@ -184,8 +184,7 @@ module.exports._findHelpers =
 function findHelpers(options) {
   return function findHelpersIterator(files) {
     var fileStatements = files.map(function(file, index){
-      var statements = file[1].body
-        .filter(findStatements)
+      var statements = findStatementsRecursive(file[1].body, [])
         .filter(findPathOriginal(options.helper))
         .map(mapPathResolve(options, files, index));
 
@@ -193,6 +192,25 @@ function findHelpers(options) {
     });
     return fileStatements;
   };
+};
+
+/*
+  findStatementsRecursive
+  ---------------
+  This is a utility around find statments that will recursively look for statments in children blocks statments
+*/
+
+var findStatementsRecursive =
+module.exports._findStatementsRecursive =
+function findStatementsRecursive(arr, accumalator) {
+  var statements = arr.filter(findStatements);
+  statements.forEach(function(statement) {
+    accumalator.push(statement);
+    if (statement.type === 'BlockStatement' && statement.program && Array.isArray(statement.program.body)) {
+      findStatementsRecursive(statement.program.body, accumalator);
+    }
+  });
+  return accumalator;
 };
 
 /*

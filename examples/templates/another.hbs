@@ -2,8 +2,15 @@
   {{bar}}
   {{view './qux'}}
   <div class="bar">
-    {{#view './baz'}}
-      <span>Hello World</span>
-    {{/view}}
+    {{#if baz}}
+      {{#view './baz'}}
+        <span>Hello World</span>
+        <div>
+          {{#view './foobarbazqux'}}
+            <span>Hello World</span>
+          {{/view}}
+        </div>
+      {{/view}}
+    {{/if}}
   </div>
 </div>
