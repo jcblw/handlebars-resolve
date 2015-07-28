@@ -28,14 +28,17 @@ module.exports = function(options) {
   if (!options.cwd) {
     options.cwd = process.cwd();
   }
+
   var filesPath = path.resolve(options.cwd, options.files);
-  glob(filesPath, function(err, files) {
-    if (err) {
-      throw err;
-    }
-    options.files = files;
-    parseFiles(options);
-  });
+  return new Promise(function(resolve, reject){
+    glob(filesPath, function(err, files) {
+      if (err) {
+        reject(err);
+      }
+      options.files = files;
+      resolve(options);
+    });
+  }).then(parseFiles);
 };
 
 /*
@@ -68,7 +71,7 @@ function createResolveFile(ws, files) {
   var requires = files.map(function(file) {
       return (
           '\ttry {\n' +
-            '\t\tthis[\'' + file[1] + '\'] = require(\'' + file[1] + '\');\n' +
+            '\t\tthis[\'' + file[3] + '\'] = require(\'' + file[1] + '\');\n' +
           '\t} catch(e) {\n' +
             '\t\tthrow Error(\'module "' +
             file[1] +
@@ -157,15 +160,16 @@ module.exports._mapPathResolve =
 function mapPathResolve(options, files, index) {
   return function mapPathResolveIterator(node) {
     var
+      ogValue = node.params[0].value,
       fileName = path.relative(options.cwd, files[index][0]),
-      absPath = path.resolve(options.cwd, options.basePath,  node.params[0].value),
+      absPath = path.resolve(options.cwd, options.basePath, ogValue),
       relPath = path.relative(options.cwd, absPath);
 
     if (!relPath.match(/^\./)) {
       relPath = './' + relPath;
     }
 
-    return [node.loc.start, relPath, fileName];
+    return [node.loc.start, relPath, fileName, ogValue];
   };
 };
 
@@ -187,7 +191,6 @@ function findHelpers(options) {
       var statements = findStatementsRecursive(file[1].body, [])
         .filter(findPathOriginal(options.helper))
         .map(mapPathResolve(options, files, index));
-
       return statements;
     });
     return fileStatements;
@@ -254,7 +257,7 @@ var parseFiles =
 module.exports._parseFiles =
 function parseFiles(options) {
   var promises = options.files.map(mapFilePromise);
-  Promise.all(promises)
+  return Promise.all(promises)
     .then(findHelpers(options))
     .then(resolveFile(options));
 };
