@@ -16,7 +16,7 @@ test('the _readFile method', function(t) {
 test('the _createResolveFile method', function(t) {
   var ws = fs.createWriteStream('./test/_createResolveFile.log');
   t.equals(typeof hbsResolve._createResolveFile, 'function', '_createResolveFile is a function');
-  hbsResolve._createResolveFile(ws,[[{line: 'baz', column: 'qux'}, 'foo', 'bar']]);
+  hbsResolve._createResolveFile(ws,[[{line: 'baz', column: 'qux'}, 'foo', 'bar', 'foo']]);
   ws.end();
   fs.readFile('./test/_createResolveFile.log', 'utf8', function(err, content) {
     t.equals(err, null, 'no error is present');
