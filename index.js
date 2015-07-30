@@ -163,7 +163,8 @@ function mapPathResolve(options, files, index) {
       ogValue = node.params[0].value,
       fileName = path.relative(options.cwd, files[index][0]),
       absPath = path.resolve(options.cwd, options.basePath, ogValue),
-      relPath = path.relative(options.cwd, absPath);
+      outputPath = path.dirname(options.outputFile),
+      relPath = path.relative(outputPath, absPath);
 
     if (!relPath.match(/^\./)) {
       relPath = './' + relPath;
