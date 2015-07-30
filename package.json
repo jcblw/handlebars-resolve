@@ -1,6 +1,6 @@
 {
   "name": "handlebars-resolve",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "We have pathing to modules in our handlebar templates, this resolves those modules for browserify packs.",
   "main": "index.js",
   "scripts": {
