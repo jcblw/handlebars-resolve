@@ -1,5 +1,6 @@
 var
   Handlebars = require('handlebars'),
+  os = require('os'),
   glob = require('glob'),
   fs = require('fs'),
   Promise = require('bluebird'),
@@ -165,6 +166,11 @@ function mapPathResolve(options, files, index) {
       absPath = path.resolve(options.cwd, options.basePath, ogValue),
       outputPath = path.dirname(options.outputFile),
       relPath = path.relative(outputPath, absPath);
+
+    if (/^win/.test(process.platform)) {
+      relPath = relPath.replace(/\\/gi, "/");
+    }
+
 
     if (!relPath.match(/^\./)) {
       relPath = './' + relPath;
