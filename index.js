@@ -165,8 +165,11 @@ function mapPathResolve(options, files, index) {
       fileName = path.relative(options.cwd, files[index][0]),
       absPath = path.resolve(options.cwd, options.basePath, ogValue),
       outputPath = path.dirname(options.outputFile),
-      relPath = (os.platform !== 'win32') ? path.relative(outputPath, absPath) : relPath = relPath.replace(/\\/gi, "/"); 
+      relPath = path.relative(outputPath, absPath);
 
+    if (/^win/.test(process.platform)) {
+      relPath = relPath.replace(/\\/gi, "/");
+    }
 
 
     if (!relPath.match(/^\./)) {
