@@ -14,12 +14,12 @@
   "author": "Jacob Lowe",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^2.9.25",
-    "glob": "^5.0.6",
-    "handlebars": "^3.0.3"
+    "bluebird": "^3.5.0",
+    "glob": "^7.1.1",
+    "handlebars": "^4.0.8"
   },
   "devDependencies": {
-    "nyc": "^2.2.1",
-    "tap": "^1.2.0"
+    "nyc": "^10.3.2",
+    "tap": "^10.3.2"
   }
 }
