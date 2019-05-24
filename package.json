@@ -14,7 +14,7 @@
   "author": "Jacob Lowe",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.5.5",
     "glob": "^7.1.1",
     "handlebars": "^4.0.8"
   },
